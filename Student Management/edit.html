@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Student</title>
+  <style>
+    body {
+      background-color: #cfe8ca;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      background:whitesmoke;
+      padding:40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 5px;
+      font-weight: 500;
+      color: #444;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      outline-color: #0056b3;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>STUDENT DETAILS</h1>
+
+    <label>Name</label>
+    <input type="text" id="name" placeholder="Name">
+
+    <label>Roll Number</label>
+    <input type="number" id="roll" placeholder="Roll Number">
+
+    <label>Email Id</label>
+    <input type="email" id="email" placeholder="Email Id">
+
+    <label>Mobile Number</label>
+    <input type="number" id="mobile" placeholder="Mobile Number">
+
+    <label>Class</label>
+    <input type="text" id="class" placeholder="Class">
+
+    <button onclick="savedata()">Save Data</button>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "ListofStudents";
+    const index = localStorage.getItem("CurrentStudent");
+
+    const storedData = localStorage.getItem(STORAGE_KEY);
+    const students = storedData ? storedData.split(',') : [];
+
+    const student = students[index];
+    const parts = student.split(" - ");
+
+    document.getElementById("name").value = parts[0];
+    document.getElementById("roll").value = parts[1];
+    document.getElementById("email").value = parts[2];
+    document.getElementById("mobile").value = parts[3] || "";
+    document.getElementById("class").value = parts[4] || "";
+
+    function savedata() {
+      let n = document.getElementById("name").value;
+      let r = document.getElementById("roll").value;
+      let e = document.getElementById("email").value;
+      let m = document.getElementById("mobile").value;
+      let c = document.getElementById("class").value;
+
+      let updatedData = n + " - " + r + " - " + e + " - " + m + " - " + c;
+
+      students[index] = updatedData;
+      localStorage.setItem(STORAGE_KEY, students.join(','));
+
+      alert("Student updated successfully!");
+      window.location.href = "AngularJS_LocalStorage.html";
+    }
+  </script>
+</body>
+
+</html>
+'

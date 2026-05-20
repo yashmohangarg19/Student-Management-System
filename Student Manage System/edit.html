@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app="studentApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Student</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    var app = angular.module("studentApp", []);
+    app.controller("EditController", function ($scope) {
+      const params = new URLSearchParams(window.location.search);
+      const index = parseInt(params.get("index"));
+
+      $scope.student = {
+        name: params.get("name"),
+        email: params.get("email"),
+        phone: params.get("phone")
+      };
+
+      $scope.updateStudent = function () {
+        const students = JSON.parse(localStorage.getItem("students")) || [];
+        students[index] = angular.copy($scope.student);
+        localStorage.setItem("students", JSON.stringify(students));
+        alert("Updated successfully!");
+        window.close();
+      };
+    });
+  </script>
+</head>
+<body ng-controller="EditController">
+
+  <h3>Edit Student</h3>
+  <input type="text" ng-model="student.name" placeholder="Name"><br><br>
+  <input type="email" ng-model="student.email" placeholder="Email"><br><br>
+  <input type="text" ng-model="student.phone" placeholder="Phone"><br><br>
+  <button ng-click="updateStudent()">Update</button>
+
+</body>
+</html>

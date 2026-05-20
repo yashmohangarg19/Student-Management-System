@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html ng-app="studentApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Record Manager</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background-image: url(https://www.leadsquared.com/wp-content/uploads/2024/07/school-management-system.png);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            color: #fff;
+        }
+
+        .container {
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1{
+            color: #efc6c6;
+            text-shadow: 1px 1px 4px #1d1c1c;
+            font-size: 40px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 8px;
+            border-radius: 5px;
+            border: none;
+            width: 240px;
+            background-color: #000000ac;
+            color: white;
+        }
+
+        button {
+            padding: 14px;
+            margin: 8px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .popup {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            display: inline-block;
+            border-radius: 5px;
+            font-weight: bold;
+            animation: fadeOut 2s ease-in-out forwards;
+            position: relative;
+        }
+
+        /* @keyframes fadeOut {
+            0% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        } */
+
+        .student {
+            background-color: #000000ac;
+            border-left: 15px solid #00c3ff;
+            color: white;
+            margin: 10px auto;
+            padding: 12px;
+            width: 70%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 6px;
+        }
+
+        .delete-btn, .edit-btn {
+            border: none;
+            padding: 8px;
+            border-radius: 5px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background-color: red;
+            color: white;
+        }
+
+        .edit-btn {
+            background-color: rgb(76, 223, 209);
+            color: white;
+        }
+    </style>
+</head>
+<body ng-controller="StudentCtrl">
+
+    <div class="container">
+        <h1>Student Record Manager</h1>
+
+        <input type="text" ng-model="student.name" placeholder="Name">
+        <input type="number" ng-model="student.roll" placeholder="Roll No">
+        <input type="email" ng-model="student.email" placeholder="Email Id">
+        <br>
+        <button ng-click="addStudent()">Add Student</button>
+
+        <div class="popup" ng-show="showPopup">
+            Student added successfully!
+        </div>
+
+        <h1>Students ({{students.length}})</h1>
+        <div class="student" ng-repeat="s in students track by $index">
+            <span>{{s}}</span>
+            <div>
+                <button class="edit-btn" ng-click="editpage($index)">Edit</button>
+                <button class="delete-btn" ng-click="deleteStudent($index)">Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        angular.module('studentApp', [])
+            .controller('StudentCtrl', function ($scope) {
+                const STORAGE_KEY = 'ListofStudents';
+                const storedData = localStorage.getItem(STORAGE_KEY);
+                $scope.students = storedData ? storedData.split(',') : [];
+                $scope.student = { name: '', roll: '', email: '' };
+
+                $scope.addStudent = function () {
+                    if ($scope.student.name && $scope.student.roll && $scope.student.email) {
+                        const entry = $scope.student.name + ' - ' + $scope.student.roll + ' - ' + $scope.student.email;
+                        $scope.students.push(entry);
+                        saveStudents();
+                        $scope.student = { name: '', roll: '', email: '' };
+                        $scope.showPopup = true;
+
+                        setTimeout(() => {
+                            $scope.$apply(() => { $scope.showPopup = false; });
+                        }, 2000);
+                    } else {
+                        alert("Please fill all fields");
+                    }
+                };
+
+                $scope.deleteStudent = function (index) {
+                    $scope.students.splice(index, 1);
+                    saveStudents();
+                };
+
+                $scope.editpage = function (index) {
+                    localStorage.setItem("CurrentStudent", index);
+                    window.location.href = 'edit.html';
+                };
+
+                function saveStudents() {
+                    localStorage.setItem(STORAGE_KEY, $scope.students.join(','));
+                }
+            });
+    </script>
+</body>
+</html>
